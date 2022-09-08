@@ -1,0 +1,24 @@
+name: Deploy Pages
+
+# Controls when the action will run
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Publish
+      run: dotnet publish -c Release
+
+    - name: Deploy Pages
+      if: success()
+      uses: crazy-max/ghaction-github-pages@v1.5.1
+      with:
+        target_branch: gh-pages
+        build_dir: BlazorAdmin/bin/Release/net6.0/publish/wwwroot
+      env:
+        GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
